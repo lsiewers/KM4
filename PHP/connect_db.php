@@ -1,8 +1,5 @@
 <?php
-   $db_user = 'luuksiewers';
-   $db_pass = 'pooc8Eegei';
-   $db_host = 'localhost';
-   $db_name = 'luuksiewers';
+    include db_login.php;
 
     /* Open a connection */
     $mysqli = new mysqli("$db_host","$db_user","$db_pass","$db_name");
