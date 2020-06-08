@@ -1,0 +1,132 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/cores/esp32"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/variants/doitESP32devkitV1"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "esp32_digital_led_lib.h",
+    "Includepath": "/Users/luuksiewers/Developer/Arduino/libraries/ESP32DigitalRGBLEDDrivers/src"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "NTPClient.h",
+    "Includepath": "/Users/luuksiewers/Developer/Arduino/libraries/NTPClient"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "WiFiUdp.h",
+    "Includepath": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "HTTPClient.h",
+    "Includepath": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/HTTPClient/src"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "WiFiClientSecure.h",
+    "Includepath": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "/Users/luuksiewers/Developer/Arduino/libraries/ArduinoJson/src"
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/build/sketch/ESP32.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/Arduino/libraries/ESP32DigitalRGBLEDDrivers/src/esp32_digital_led_funcs.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/Arduino/libraries/ESP32DigitalRGBLEDDrivers/src/esp32_digital_led_lib.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/Arduino/libraries/ESP32DigitalRGBLEDDrivers/src/fireworks_effects.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Developer/Arduino/libraries/NTPClient/NTPClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/ETH.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFi.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiAP.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiGeneric.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiMulti.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiSTA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiScan.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiServer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiUdp.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/HTTPClient/src/HTTPClient.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/WiFiClientSecure.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/Users/luuksiewers/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/ssl_client.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

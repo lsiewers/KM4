@@ -1,0 +1,8 @@
+{
+    "board": "esp32:esp32:esp32doit-devkit-v1",
+    "configuration": "FlashFreq=80,UploadSpeed=115200,DebugLevel=none",
+    "programmer": "AVRISP mkII",
+    "port": "/dev/cu.usbserial-0001",
+    "sketch": "ESP32/ESP32.ino",
+    "output": "ESP32/build"
+}
