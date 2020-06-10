@@ -8,13 +8,19 @@
 
 <form action="devicePreferences_update.php">
     <h3><label for="strictness">strictness</label></h3>
-    <input name="strictness" type="range" value="<?= $deviceRow['strictness'] * 100 ?>" min="0" max="100"><br>
+    <?= $row['strictness'] ?>
+    <input name="strictness" type="range" value="<?= $row['strictness'] * 100 ?>" min="0" max="100"><br>
     <input type="submit" value="update">
 </form>
 
 <h3>Upcoming recommended bedtimes</h3>
-<pre>In bed time (sunset): <?= $row["inBedTime"] ?></pre>
-<pre>Awake time (sunrise): <?= $row["outBedTime"] ?></pre>
+<pre><?php 
+    if($row["inBedTime"] == NULL) 
+        echo "Get your device running first to get your recommended time";
+    else 
+        echo "In bed time (sunset): ". $row["inBedTime"] . "<br>Out bed time (sunrise):" .  $row["outBedTime"]; 
+    ?>
+</pre>
 
 <h2>Records</h2>
 <ul class="records">
@@ -31,23 +37,27 @@
 
     $record = $result->fetch_assoc();
 
-    do {
-        echo "<li>"
-                .strftime("%A %d %B", strtotime($record["inBedRecord"])).
-                "
-                <ul>
-                    <li><small>Went to bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["inBedRecord"]))."</strong>, ".showDiff($record["inBedRecord"],$record["inBedRecommended"])."</li>
-                    <li><small>Went out of bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["outBedRecord"]))."</strong>, ".showDiff($record["outBedRecord"],$record["outBedRecommended"])."</li>
-                </ul> 
-                <form method='POST'> 
-                    <input type='text' name='id' value='" . $record['id'] ."' hidden />
-                    <input type='submit' name='deleteBtn' value='Delete Record'/> 
-                </form> 
-            </li>";
-    } while ($record = $result->fetch_assoc());
+    if($record["inBedRecord"] == 0) {
+        echo "no records yet";
+    } else {
+        do {
+            echo "<li>"
+                    .strftime("%A %d %B", strtotime($record["inBedRecord"])).
+                    "
+                    <ul>
+                        <li><small>Went to bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["inBedRecord"]))."</strong>, ".showDiff($record["inBedRecord"],$record["inBedRecommended"])."</li>
+                        <li><small>Went out of bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["outBedRecord"]))."</strong>, ".showDiff($record["outBedRecord"],$record["outBedRecommended"])."</li>
+                    </ul> 
+                    <form method='POST'> 
+                        <input type='text' name='id' value='" . $record['id'] ."' hidden />
+                        <input type='submit' name='deleteRecordBtn' value='Delete Record'/> 
+                    </form> 
+                </li>";
+        } while ($record = $result->fetch_assoc());
+    }
 
 
-    if(isset($_POST['deleteBtn'])) { 
+    if(isset($_POST['deleteRecordBtn'])) { 
         $deleteQuery = "DELETE FROM c_bedTimeRecords WHERE id=" . $_POST['id'];
         echo "<br>";
         if ($mysqli->query($deleteQuery) === TRUE) {

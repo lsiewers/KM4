@@ -98,7 +98,9 @@ void httpGetRecommended() {
             // Serial.println(getMinutes(outBedTimeRecommended));
             // Serial.println(getSeconds(outBedTimeRecommended));
             outBedTimeRecommended = outBedRecommended;
-            sunrise_startTime = getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended);
+            sunrise_startTime = getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended) - sunrise_animDuration;
+            Serial.print((currentTime - getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended) - sunrise_animDuration)/60);
+            Serial.println(" minutes ago you should have gone out of bed");
         } else {
             Serial.println(F("JSON incorrect?"));
             Serial.println(err.c_str());

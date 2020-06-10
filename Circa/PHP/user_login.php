@@ -19,6 +19,10 @@
         $password = checkParam("password", 30, false); // number between 0 - 30
         $email = checkParam("email", 99, FILTER_VALIDATE_EMAIL); // number between 0 - 999
 
+        if($password == NULL || $email == NULL) {
+            header('Location: user_form.php?feedback=' . urlencode("Make sure to fill both fields"));
+        }
+
         echo $query = "SELECT * FROM c_users WHERE email='" . $email . "' AND password='" . $password . "' LIMIT 1";
 
         // check for errors in insert query
@@ -26,12 +30,11 @@
             showerror($mysqli->errno,$mysqli->error);
         } else {
             $row = $result->fetch_assoc();
-            $_SESSION["userId"]= $row["id"];
-            echo "<br> Logged in! <br><br>" .  $_SESSION["userId"] . " " . $row["id"];
-            if($_SESSION["userId"] != NULL) {
+            if($row["id"] != NULL) {
+                $_SESSION["userId"]= $row["id"];
                 header('Location: user_dashboard.php');
             } else {
-                echo "Your account doesn't exist";
+                header('Location: user_form.php?feedback=' . urlencode("Whoops, are you sure your email/password are right?"));
             }
         }
     ?>

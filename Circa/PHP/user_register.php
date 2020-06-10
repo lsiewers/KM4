@@ -24,7 +24,7 @@
     $chronotype = checkParam("chronotype", 75, false);
     $firstName = checkParam("firstName", 75, false);
 
-    $query = "SELECT * FROM c_users WHERE email='" . $email . "' AND password='" . $password . "'";
+    $query = "SELECT * FROM c_users WHERE email='" . $email . "'";
 
     // check for errors in insert query
     if (!($result = $mysqli->query($query))) {
@@ -43,6 +43,8 @@
                 echo "Error: " . $setUserQuery . "<br>" . $mysqli->error;
             }
         //         header('Location: user_account.php');
+        } else {
+            echo "An account with this email exists already!";
         }
     }
 ?>

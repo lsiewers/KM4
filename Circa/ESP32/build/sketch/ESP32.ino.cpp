@@ -34,10 +34,10 @@ strand_t STRANDS[1] = {
 int STRANDCNT = COUNT_OF(STRANDS);
 
 int beforeBed_animDuration = 1800; // seconds (30 minutes)
-int sunrise_animDuration = 20;    // seconds
-int sunset_animDuration = 15;    // seconds
+int sunrise_animDuration = 1800;    // 30 minutes in seconds
+int sunset_animDuration = 1800;    // 30 minutes in seconds
 
-int sunrise_startTime; // time to start sunrise 
+int sunrise_startTime; // time to start sunrise in millis() -> from daily httpClient request
 int sunset_startTime; // directly after before bed indicatio
 int beforeBed_startTime; // time to start beforeBed (moment to prepare for sleep) in millis() -> from daily httpClient request
 
@@ -46,7 +46,7 @@ int beforeBed_startTime; // time to start beforeBed (moment to prepare for sleep
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-const long utcOffsetInSeconds = 3600;
+const long utcOffsetInSeconds = 7200;
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -72,6 +72,8 @@ const char *password = "B4gels=L0ve";
 bool isInBed = false;
 bool wasInBed = false;
 
+String inBedTimeRecommended;
+String outBedTimeRecommended;
 String inBedTimeRecord;
 String outBedTimeRecord;
 
@@ -81,9 +83,9 @@ bool sendRecords = false;
 int deviceId = 1;
 
 //**************************************************************************//
-#line 82 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
+#line 84 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
 void setup();
-#line 113 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
+#line 114 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
 void loop();
 #line 16 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/fansFunctions.ino"
 void fansInit();
@@ -97,25 +99,25 @@ void setSpeed(int amount);
 void httpRequest(String request);
 #line 53 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 bool httpSendRecords();
-#line 73 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
+#line 77 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 void httpGetRecommended();
-#line 103 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
+#line 111 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 int getHours(String time);
-#line 104 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
+#line 112 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 int getMinutes(String time);
-#line 105 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
+#line 113 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 int getSeconds(String time);
-#line 107 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
+#line 115 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/httpRequests.ino"
 String urlencode(String str);
 #line 3 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
 void ledStripUpdate();
 #line 9 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
 void sunrise(strand_t ** strands);
-#line 54 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
+#line 49 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
 uint8_t sunriseFadeColor(String rgbwColor, int i);
-#line 95 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
+#line 90 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
 bool beforeBed(strand_t ** strands);
-#line 119 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
+#line 114 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledFunctions.ino"
 uint8_t fadeInColor(String rgbwColor, uint8_t value, float startTime);
 #line 3 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledInit.ino"
 int getMaxMalloc(int min_mem, int max_mem);
@@ -133,9 +135,11 @@ void ntpClientInit();
 void btnLedInit();
 #line 18 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/recordTimes.ino"
 void btnPress();
-#line 39 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/recordTimes.ino"
+#line 42 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/recordTimes.ino"
 void setBedTimeRecords();
-#line 82 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
+#line 60 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/recordTimes.ino"
+String getFullFormattedTime();
+#line 84 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ESP32.ino"
 void setup()
 {
   Serial.begin(115200);
@@ -155,13 +159,12 @@ void setup()
   fansInit();
   ntpClientInit();
   btnLedInit();
-  // httpGetRecommended();
+  httpGetRecommended();
   
-  // test actuators at start up
+  // Test animations after start-up
   sunrise_startTime = currentTime;
   // beforeBed_startTime = currentTime;
-  // sunset_startTime = currentTime;
-  // fansOn();
+  //  sunset_startTime = currentTime;
 
   Serial.println("Init complete");
 }
@@ -312,11 +315,15 @@ void httpRequest(String request)
 bool httpSendRecords() {
     // create json object
     DynamicJsonDocument doc(2048);
-    // mock data
-    bool setInBedRecord = doc["inBedTimeRecord"].set("2020-06-05 23:23:21");
-    bool setOutBedRecord = doc["outBedTimeRecord"].set("2020-06-06 10:21:34");
-    bool setInBedRecommended = doc["inBedTimeRecommended"].set("2020-06-05 22:40:00");
-    bool setOutBedRecommended = doc["outBedTimeRecommended"].set("2020-06-06 10:10:00");
+    // // mock data
+    // bool setInBedRecord = doc["inBedTimeRecord"].set("2020-06-05 23:23:21");
+    // bool setOutBedRecord = doc["outBedTimeRecord"].set("2020-06-06 10:21:34");
+    // bool setInBedRecommended = doc["inBedTimeRecommended"].set("2020-06-05 22:40:00");
+    // bool setOutBedRecommended = doc["outBedTimeRecommended"].set("2020-06-06 10:10:00");
+    bool setInBedRecord = doc["inBedTimeRecord"].set(inBedTimeRecord);
+    bool setOutBedRecord = doc["outBedTimeRecord"].set(outBedTimeRecord);
+    bool setInBedRecommended = doc["inBedTimeRecommended"].set(inBedTimeRecommended);
+    bool setOutBedRecommended = doc["outBedTimeRecommended"].set(outBedTimeRecommended);
     if(setInBedRecord && setOutBedRecord && setInBedRecommended && setOutBedRecommended) {
         String jsonStr;        
         serializeJson(doc, jsonStr);
@@ -336,22 +343,26 @@ void httpGetRecommended() {
         DeserializationError err = deserializeJson(doc, response);
         
         if (!err) {
-            const String inBedTimeRecommended = doc["inBedTimeRecommended"];
-            const String outBedTimeRecommended = doc["outBedTimeRecommended"];
+            const String inBedRecommended = doc["inBedTimeRecommended"];
+            const String outBedRecommended = doc["outBedTimeRecommended"];
             Serial.print("In bed at: ");
-            Serial.println(inBedTimeRecommended);
+            Serial.println(inBedRecommended);
             // Serial.println(getHours(inBedTimeRecommended));
             // Serial.println(getMinutes(inBedTimeRecommended));
             // Serial.println(getSeconds(inBedTimeRecommended));
             // Serial.println(getHours(inBedTimeRecommended) * 3600 + getMinutes(inBedTimeRecommended) * 60 + getSeconds(inBedTimeRecommended));
+            inBedTimeRecommended = inBedRecommended;
             sunset_startTime = getHours(inBedTimeRecommended) * 3600 + getMinutes(inBedTimeRecommended) * 60 + getSeconds(inBedTimeRecommended);
             beforeBed_startTime = sunset_startTime - beforeBed_animDuration;
             Serial.print("Out bed at: ");
-            Serial.println(outBedTimeRecommended);
+            Serial.println(outBedRecommended);
             // Serial.println(getHours(outBedTimeRecommended));
             // Serial.println(getMinutes(outBedTimeRecommended));
             // Serial.println(getSeconds(outBedTimeRecommended));
-            sunrise_startTime = getHours(outBedTimeRecommended) * 3600 + getMinutes(outBedTimeRecommended) * 60 + getSeconds(outBedTimeRecommended);
+            outBedTimeRecommended = outBedRecommended;
+            sunrise_startTime = getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended) - sunrise_animDuration;
+            Serial.print((currentTime - getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended) - sunrise_animDuration)/60);
+            Serial.println(" minutes ago you should have gone out of bed");
         } else {
             Serial.println(F("JSON incorrect?"));
             Serial.println(err.c_str());
@@ -410,18 +421,15 @@ void sunrise(strand_t ** strands) {
   // led sunrise animation
   if (currentTime >= sunrise_startTime && currentTime - sunrise_startTime <= sunrise_animDuration) {
     float startTime;
-    // Serial.println(animation_active);
     if(!sunrise_active) {
         startTime = millis();
-        // Serial.println("sunset started");
+        Serial.println("sunset started");
         sunrise_active = true;
         fansOn();
     }
     strand_t * pStrand = strands[0]; // select only strip
     sunrise_animProgress = map(millis() - startTime, 0, sunrise_animDuration * 1000, 0, sunrise_animPrecision);
-    float fanSpeed = map(sunrise_animProgress, 0, sunrise_animPrecision, 0, 255);
-    setSpeed(fanSpeed);
-
+    setSpeed(map(sunrise_animProgress, 0, sunrise_animDuration, 0, 255));
     if (sunrise_animProgress < sunrise_animPrecision - sunrise_animPrecision * sunrise_fullDuration) {
       sunrise_activeStep = map(sunrise_animProgress, 0, sunrise_animPrecision - sunrise_animPrecision * sunrise_fullDuration, 0, sun_quarterStep * 2); 
     } else sunrise_activeStep = sun_quarterStep * 2;
@@ -441,12 +449,10 @@ void sunrise(strand_t ** strands) {
     // }
     digitalLeds_drawPixels(strands, 1);
   } else if (sunrise_active) {
-    Serial.println("no sunrise now");
     sunrise_active = false; 
-    fansOff();
-    // if(isInBed) {
-      sunrise_startTime = currentTime; // 
-    // }
+    if(isInBed) {
+      sunrise_startTime = currentTime - sunrise_animDuration; // 
+    }
   }
 }
 
@@ -537,9 +543,9 @@ uint8_t fadeInColor(String rgbwColor, uint8_t value, float startTime) {
 }
 
 ///*** sunset, directly after before bed indication ***///
-// Due to returning error ```Guru Meditation Error: Core  0 panic'ed (LoadProhibited). Exception was unhandled.```
-// Which makes no sense to me, since the sunrise function works and is almost the same.
-// And with no time left, I decided to stop spending time on this.
+// I gave up on this one, because of strange errors and shortage of time
+// The before bed indication should be enough for first version
+
 // void sunset(strand_t ** strands) { // led sunrise animation
 //   if (currentTime >= sunset_startTime && currentTime - sunset_startTime <= sunset_animDuration) {
 //     float startTime;
@@ -558,16 +564,49 @@ uint8_t fadeInColor(String rgbwColor, uint8_t value, float startTime) {
 //     int startingPoint = sun_bottomCenter - sun_quarterStep*2;
 //     for(int i = sun_quarterStep*2; i < sunset_activeStep; i--) {
 //       if(i > sun_quarterStep) {
-//         pStrand->pixels[startingPoint + sun_quarterStep*2 - i] = pixelFromRGBW(100, 5, 0, 0);
+//         // pStrand->pixels[startingPoint + sun_quarterStep*2 - i] = pixelFromRGBW(sunsetFadeColor("r", i), sunsetFadeColor("g", i), 0, 0);
 //       } else {
 //         pStrand->pixels[sun_bottomCenter + i] = pixelFromRGBW(sunsetFadeColor("r", i), sunsetFadeColor("g", i), 0, 0);
 //       }
 //       // Serial.println(sun_bottomCenter - sun_quarterStep*2 + i);
 //       // i = 0 to sun_quarterStep
-//       pStrand->pixels[startingPoint - sun_quarterStep + i/2] = pixelFromRGBW(100, 5, 0, 0);
+//       pStrand->pixels[startingPoint - sun_quarterStep + i/2] = pixelFromRGBW(sunsetFadeColor("r", i), sunsetFadeColor("g", i), 0, 0);
 //     }
 //     digitalLeds_drawPixels(strands, 1);
 //   } else if (animation_active) animation_active = false;
+// }
+
+// // color fade out function
+// uint8_t sunsetFadeColor(String rgbwColor, int i) {
+//   // float treshold = sunset_animPrecision * sunset_ledFadeOutDuration;
+//   // // i (0 - quarterstep * 2), progress (0 - precision)
+//   // // precision / (quarterstep * 2) * i = i progress in precision
+//   // float thisProgressStart = (sunset_animPrecision - sunset_animPrecision * sunset_fullDuration) / (sun_quarterStep * 2.0) * float(i);
+//   // float thisProgressEnd = thisProgressStart - treshold;
+//   // float fadeProgress;
+//   uint8_t color;
+
+//   // // led not reached yet
+//   // if (sunset_animProgress < thisProgressStart) fadeProgress = 0.0;
+//   // // led fading in
+//   // else if (sunset_animProgress < thisProgressEnd) fadeProgress = map(sunset_animProgress, thisProgressStart, thisProgressEnd, 0, sunset_ledFadeOutPrecision);
+//   // // led fade ended
+//   // else fadeProgress = sunset_ledFadeOutPrecision;
+
+//   // if(fadeProgress <= 0.0) {
+//    if (rgbwColor == "r") color = uint8_t(100.0);
+//    if (rgbwColor == "g") color = uint8_t(5.0);
+//   // }
+//   // else if(fadeProgress < sunset_ledFadeOutPrecision) {
+//   //  if (rgbwColor == "r") color = uint8_t(100.0 - (100.0/(sunset_ledFadeOutPrecision/2)*(fadeProgress-sunset_ledFadeOutPrecision/2)));
+//   //  if (rgbwColor == "g") color = uint8_t(5.0 - 5.0/(sunset_ledFadeOutPrecision/2)*(fadeProgress-sunset_ledFadeOutPrecision/2));
+//   // }
+//   // else {
+//   //  if (rgbwColor == "r") color = uint8_t(0.0);
+//   //  if (rgbwColor == "g") color = uint8_t(0.0);
+//   // }
+  
+//   return color;
 // }
 
 #line 1 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/ledInit.ino"
@@ -694,15 +733,15 @@ void ntpClientInit()
     timeClient.begin();
     timeClient.update();
     currentTime = timeClient.getSeconds() + timeClient.getMinutes() * 60 + timeClient.getHours() * 3600;
-    // Serial.println(timeClient.getEpochTime());
+    Serial.println(timeClient.getFormattedTime());
     Serial.println(currentTime);
     // beforeBed_startTime = currentTime + 5;
 }
 #line 1 "/Users/luuksiewers/Developer/PlatformIO/Projects/KM4/Circa/ESP32/recordTimes.ino"
-// We assigned a name LED pin to pin number 22
+// We assigned a name LED pin to pin number 23
 const int LedPin = 23; 
 // this will assign the name PushButton to pin numer 15
-const int BtnPin = 34;
+const int BtnPin = 15;
 
 bool btnPressed = false;
 unsigned long btnPressTimeOutDuration = 3000.0; // minimal time between in bed/out bed
@@ -721,15 +760,18 @@ void btnPress() {
     btnPressed = (millis() - btnPressedTime < btnPressTimeOutDuration);
 
     if(btnVal == LOW) {
+        Serial.println("press!!!");
         if (!btnPressed) {
             btnPressedTime = millis();
             isInBed = !isInBed;
             if(isInBed) {
                 digitalWrite(LedPin, LOW);
                 Serial.println("Good night");
+                inBedTimeRecord = getFullFormattedTime();
             } else {
                 digitalWrite(LedPin, HIGH);
                 Serial.println("Good morning");
+                outBedTimeRecord = getFullFormattedTime();
             } 
         }
     }
@@ -753,4 +795,31 @@ void setBedTimeRecords()
         // Serial.println("Out of bed at: " + outBedTimeRecord);
         sendRecords = true;
     }
+}
+
+String getFullFormattedTime() {
+   time_t rawtime = timeClient.getEpochTime();
+   struct tm * ti;
+   ti = localtime (&rawtime);
+
+   uint16_t year = ti->tm_year + 1900;
+   String yearStr = String(year);
+
+   uint8_t month = ti->tm_mon + 1;
+   String monthStr = month < 10 ? "0" + String(month) : String(month);
+
+   uint8_t day = ti->tm_mday;
+   String dayStr = day < 10 ? "0" + String(day) : String(day);
+
+   uint8_t hours = ti->tm_hour;
+   String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
+
+   uint8_t minutes = ti->tm_min;
+   String minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+
+   uint8_t seconds = ti->tm_sec;
+   String secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
+
+   return yearStr + "-" + monthStr + "-" + dayStr + " " +
+          hoursStr + ":" + minuteStr + ":" + secondStr;
 }

@@ -14,10 +14,11 @@ void sunrise(strand_t ** strands) {
         startTime = millis();
         Serial.println("sunset started");
         sunrise_active = true;
+        fansOn();
     }
     strand_t * pStrand = strands[0]; // select only strip
     sunrise_animProgress = map(millis() - startTime, 0, sunrise_animDuration * 1000, 0, sunrise_animPrecision);
-
+    setSpeed(map(sunrise_animProgress, 0, sunrise_animPrecision, 0, 255));
     if (sunrise_animProgress < sunrise_animPrecision - sunrise_animPrecision * sunrise_fullDuration) {
       sunrise_activeStep = map(sunrise_animProgress, 0, sunrise_animPrecision - sunrise_animPrecision * sunrise_fullDuration, 0, sun_quarterStep * 2); 
     } else sunrise_activeStep = sun_quarterStep * 2;
@@ -38,6 +39,7 @@ void sunrise(strand_t ** strands) {
     digitalLeds_drawPixels(strands, 1);
   } else if (sunrise_active) {
     sunrise_active = false; 
+    fansOff();
     if(isInBed) {
       sunrise_startTime = currentTime - sunrise_animDuration; // 
     }

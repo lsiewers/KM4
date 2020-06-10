@@ -44,7 +44,7 @@ int beforeBed_startTime; // time to start beforeBed (moment to prepare for sleep
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-const long utcOffsetInSeconds = 3600;
+const long utcOffsetInSeconds = 7200;
 
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -101,10 +101,11 @@ void setup()
   ntpClientInit();
   btnLedInit();
   httpGetRecommended();
-  // Test times
-  // sunrise_startTime = currentTime;
+  
+  // Test animations after start-up
+  sunrise_startTime = currentTime;
   // beforeBed_startTime = currentTime;
-//  sunset_startTime = currentTime;
+  //  sunset_startTime = currentTime;
 
   Serial.println("Init complete");
 }

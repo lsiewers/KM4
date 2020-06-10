@@ -22,8 +22,10 @@
     }
 
     $query = "SELECT 
-                    u.firstName AS firstName, 
+                    u.firstName AS firstName,
+                    u.id AS userId,
                     d.id AS deviceId,
+                    d.strictness AS strictness,
                     d.sunriseTime AS outBedTime,
                     d.sunsetTime AS inBedTime
                 FROM c_users u
@@ -40,7 +42,8 @@
             include "deviceRegister_form.php";
         } else {
             include "devicePreferences_form.php";
-            echo
+            include "deviceRegister_deregister.php";
+            include "user_delete.php";
         }
     }
 
