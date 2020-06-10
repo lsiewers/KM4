@@ -1,7 +1,7 @@
-// We assigned a name LED pin to pin number 22
+// We assigned a name LED pin to pin number 23
 const int LedPin = 23; 
 // this will assign the name PushButton to pin numer 15
-const int BtnPin = 34;
+const int BtnPin = 15;
 
 bool btnPressed = false;
 unsigned long btnPressTimeOutDuration = 3000.0; // minimal time between in bed/out bed
@@ -12,6 +12,7 @@ void btnLedInit() {
   pinMode(LedPin, OUTPUT);
   // This statement will declare pin 15 as digital input 
   pinMode(BtnPin, INPUT);
+     digitalWrite(LedPin, HIGH);
 }
 
 void btnPress() {
@@ -19,15 +20,18 @@ void btnPress() {
     btnPressed = (millis() - btnPressedTime < btnPressTimeOutDuration);
 
     if(btnVal == LOW) {
+        Serial.println("press!!!");
         if (!btnPressed) {
             btnPressedTime = millis();
             isInBed = !isInBed;
             if(isInBed) {
                 digitalWrite(LedPin, LOW);
                 Serial.println("Good night");
+                inBedTimeRecord = getFullFormattedTime();
             } else {
                 digitalWrite(LedPin, HIGH);
                 Serial.println("Good morning");
+                outBedTimeRecord = getFullFormattedTime();
             } 
         }
     }
@@ -51,4 +55,31 @@ void setBedTimeRecords()
         // Serial.println("Out of bed at: " + outBedTimeRecord);
         sendRecords = true;
     }
+}
+
+String getFullFormattedTime() {
+   time_t rawtime = timeClient.getEpochTime();
+   struct tm * ti;
+   ti = localtime (&rawtime);
+
+   uint16_t year = ti->tm_year + 1900;
+   String yearStr = String(year);
+
+   uint8_t month = ti->tm_mon + 1;
+   String monthStr = month < 10 ? "0" + String(month) : String(month);
+
+   uint8_t day = ti->tm_mday;
+   String dayStr = day < 10 ? "0" + String(day) : String(day);
+
+   uint8_t hours = ti->tm_hour;
+   String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
+
+   uint8_t minutes = ti->tm_min;
+   String minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+
+   uint8_t seconds = ti->tm_sec;
+   String secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
+
+   return yearStr + "-" + monthStr + "-" + dayStr + " " +
+          hoursStr + ":" + minuteStr + ":" + secondStr;
 }

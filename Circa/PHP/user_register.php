@@ -1,6 +1,19 @@
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
 
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+  <title>CIRCA personal sun</title>
+  <meta name="author" content="Luuk Siewers">
+
+</head>
+
+<body>
 <?php
     include 'connect_db.php';
     include 'checkparam.php';
@@ -33,3 +46,5 @@
         }
     }
 ?>
+</body>
+</html>

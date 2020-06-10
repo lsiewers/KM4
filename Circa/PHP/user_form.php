@@ -1,3 +1,16 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+  <title>CIRCA personal sun</title>
+  <meta name="author" content="Luuk Siewers">
+
+</head>
+
+<body>
 <h1>Login page</h1>
 <!-- https://home.hku.nl/~ton.markus/kern_iad/index.php?les=6&content=7 -->
 <form action="user_login.php" method="get">
@@ -14,3 +27,5 @@
 
 <p>Not registered yet?</p>
 <a href="user_registerForm.php">Register</a>
+</body>
+</html>

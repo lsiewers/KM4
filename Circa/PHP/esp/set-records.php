@@ -10,6 +10,7 @@
 
     // success callback, so ESP32 knows
     if ($mysqli->query($setDataQuery) === TRUE) {
+        // echo $data['inBedTimeRecord']
         echo "true";
     } else {
         echo "Error: " . $setDataQuery . "<br>" . $mysqli->error;

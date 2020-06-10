@@ -1,7 +1,17 @@
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
+<!doctype html>
 
-<h1>Account page</h1>
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+  <title>CIRCA personal sun</title>
+  <meta name="author" content="Luuk Siewers">
+
+</head>
+
+<body>
+<h1>Dashboard</h1>
 
 <?php
     include 'connect_db.php';
@@ -11,28 +21,39 @@
         header("Location: user_form.php?feedback=" . urlencode('Session ended, login and try again please'));
     }
 
-    $getUserQuery = "SELECT * FROM c_users WHERE id=" . $_SESSION['userId'] . " LIMIT 1";
+    $query = "SELECT 
+                    u.firstName AS firstName, 
+                    d.id AS deviceId,
+                    d.sunriseTime AS outBedTime,
+                    d.sunsetTime AS inBedTime
+                FROM c_users u
+                LEFT JOIN c_devices d ON (userId='".$_SESSION['userId']."')
+                WHERE u.id='" . $_SESSION['userId'] . "' LIMIT 1";
     
-    if (!($result = $mysqli->query($getUserQuery))) {
+    if (!($result = $mysqli->query($query))) {
         showerror($mysqli->errno,$mysqli->error);
     } else {
-        $userRow = $result->fetch_assoc();
-        echo "<br> Hello, " . $userRow['firstName'];
-    }
-
-    $getUserDevicesQuery = "SELECT * FROM c_devices WHERE userId=" . $_SESSION['userId'] . " LIMIT 1";
-
-    if (!($result = $mysqli->query($getUserDevicesQuery))) {
-        showerror($mysqli->errno,$mysqli->error);
-    } else {
-        $deviceRow = $result->fetch_assoc();
-        if($deviceRow == NULL) {
+        $row = $result->fetch_assoc();
+        echo "<br> Hello, " . $row['firstName'];
+        if($row['deviceId'] == NULL) {
             echo "<br>No device connected to this user";
             include "deviceRegister_form.php";
         } else {
             include "devicePreferences_form.php";
+            echo
         }
     }
+
+    // $getUserDevicesQuery = "SELECT * FROM c_devices WHERE userId=" . $_SESSION['userId'] . " LIMIT 1";
+
+    // if (!($result = $mysqli->query($getUserDevicesQuery))) {
+    //     showerror($mysqli->errno,$mysqli->error);
+    // } else {
+    //     $deviceRow = $result->fetch_assoc();
+    //     
+    // }
 ?>
 
 <a href="user_logout.php">Log out</a>
+</body>
+</html>

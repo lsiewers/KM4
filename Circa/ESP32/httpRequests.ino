@@ -22,13 +22,14 @@ const char *ROOT_CA_CERT =
     "+o0bJW1sj6W3YQGx0qMmoRBxna3iw/nDmVG3KwcIzi7mULKn+gpFL6Lw8g==\n"
     "-----END CERTIFICATE-----\n";
 
-int userId = 1;
-
 String protocol = "https";
 String host = "studenthome.hku.nl/~luuk.siewers/circa";
 
-String httpRequest(String request)
+String response;
+
+void httpRequest(String request)
 {
+    response = "\0";
     String url = protocol + "://" + host + "/esp32/" + request;
 
     client.begin(url,ROOT_CA_CERT);
@@ -38,8 +39,7 @@ String httpRequest(String request)
     int httpResultCode = client.GET();
     if (httpResultCode = HTTP_CODE_OK)
     {
-        Serial.println(client.getString());
-        return client.getString();
+        response = client.getString();
     }
     else
     {
@@ -47,46 +47,66 @@ String httpRequest(String request)
         Serial.println(httpResultCode);
         delay(3000);
     }
-
     client.end();
 }
 
 bool httpSendRecords() {
     // create json object
     DynamicJsonDocument doc(2048);
-    // mock data
-    bool setInBedRecord = doc["inBedTimeRecord"].set("2020-06-05 23:23:21");
-    bool setOutBedRecord = doc["outBedTimeRecord"].set("2020-06-06 10:21:34");
-    bool setInBedRecommended = doc["inBedTimeRecommended"].set("2020-06-05 22:40:00");
-    bool setOutBedRecommended = doc["outBedTimeRecommended"].set("2020-06-06 10:10:00");
+    // // mock data
+    // bool setInBedRecord = doc["inBedTimeRecord"].set("2020-06-05 23:23:21");
+    // bool setOutBedRecord = doc["outBedTimeRecord"].set("2020-06-06 10:21:34");
+    // bool setInBedRecommended = doc["inBedTimeRecommended"].set("2020-06-05 22:40:00");
+    // bool setOutBedRecommended = doc["outBedTimeRecommended"].set("2020-06-06 10:10:00");
+    bool setInBedRecord = doc["inBedTimeRecord"].set(inBedTimeRecord);
+    bool setOutBedRecord = doc["outBedTimeRecord"].set(outBedTimeRecord);
+    bool setInBedRecommended = doc["inBedTimeRecommended"].set(inBedTimeRecommended);
+    bool setOutBedRecommended = doc["outBedTimeRecommended"].set(outBedTimeRecommended);
     if(setInBedRecord && setOutBedRecord && setInBedRecommended && setOutBedRecommended) {
         String jsonStr;        
         serializeJson(doc, jsonStr);
         String request = String("set-records.php?deviceId=") + String(deviceId) + String("&data=") + urlencode(jsonStr);
-        // Serial.println(request);
+        httpRequest(request);
         // send json data in request
-        return (bool)httpRequest(request);
+        if(response == "true") { return true; } 
     } else {
         Serial.println("set json data went wrong...");
     }
 }
 
 void httpGetRecommended() {
-    String response = httpRequest("get-recommended.php?deviceId=" + String(deviceId));
-    DynamicJsonDocument doc(256);   
-    DeserializationError err = deserializeJson(doc, response);
-    
-    if (!err) {
-        const String inBedTimeRecommended = doc["inBedTimeRecommended"];
-        Serial.print("In bed at: ");
-        Serial.println(inBedTimeRecommended);
-    } else {
-      Serial.println(F("JSON incorrect?"));
-      Serial.println(err.c_str());
+    httpRequest("get-recommended.php?deviceId=" + String(deviceId));
+    if(response != "\0") {
+        DynamicJsonDocument doc(256);   
+        DeserializationError err = deserializeJson(doc, response);
+        
+        if (!err) {
+            const String inBedRecommended = doc["inBedTimeRecommended"];
+            const String outBedRecommended = doc["outBedTimeRecommended"];
+            Serial.print("In bed at: ");
+            Serial.println(inBedRecommended);
+            // Serial.println(getHours(inBedTimeRecommended));
+            // Serial.println(getMinutes(inBedTimeRecommended));
+            // Serial.println(getSeconds(inBedTimeRecommended));
+            // Serial.println(getHours(inBedTimeRecommended) * 3600 + getMinutes(inBedTimeRecommended) * 60 + getSeconds(inBedTimeRecommended));
+            inBedTimeRecommended = inBedRecommended;
+            sunset_startTime = getHours(inBedTimeRecommended) * 3600 + getMinutes(inBedTimeRecommended) * 60 + getSeconds(inBedTimeRecommended);
+            beforeBed_startTime = sunset_startTime - beforeBed_animDuration;
+            Serial.print("Out bed at: ");
+            Serial.println(outBedRecommended);
+            // Serial.println(getHours(outBedTimeRecommended));
+            // Serial.println(getMinutes(outBedTimeRecommended));
+            // Serial.println(getSeconds(outBedTimeRecommended));
+            outBedTimeRecommended = outBedRecommended;
+            sunrise_startTime = getHours(outBedRecommended) * 3600 + getMinutes(outBedRecommended) * 60 + getSeconds(outBedRecommended);
+        } else {
+            Serial.println(F("JSON incorrect?"));
+            Serial.println(err.c_str());
+        }
     }
 }
 
-int getHour(String time) { return time.substring(0,2).toInt(); }
+int getHours(String time) { return time.substring(0,2).toInt(); }
 int getMinutes(String time) { return time.substring(3,5).toInt(); }
 int getSeconds(String time) { return time.substring(6,8).toInt(); }
 

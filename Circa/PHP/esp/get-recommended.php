@@ -65,16 +65,18 @@
     // echo "<br>";
     // echo "strictness = " . (string)(1-$row['strictness']) . " <br>";
     // algorithm($row['totalInBedAvg'], $row['weekInBedAvg'], $row['chronoInBedTime'], (1 - $row['strictness']));
+    $calculatedCount = 0;
 
     if (!isset($obj)) $obj = new stdClass();
+
     $inBedTimeRecommended = algorithm($row['totalInBedAvg'], $row['weekInBedAvg'], $row['chronoInBedTime'], $row['strictness'], "inBedTimeRecommended", $obj);
     $outBedTimeRecommended = algorithm($row['totalOutBedAvg'], $row['weekOutBedAvg'], $row['chronoOutBedTime'], $row['strictness'], "outBedTimeRecommended", $obj);
 
-
     // send json obj to ESP32
-    echo json_encode($obj);
+    echo $json = json_encode($obj);
 
     function algorithm($avgTime, $avgWeekTime, $chronoTime, $strictness, $jsonKeyVal, $jsonObj) {
+        global $calculatedCount;
         /// average time * strictness + chronotype time * inversed strictness
         $strictnessSum = strtotime($avgTime) * (1 - $strictness) + strtotime($chronoTime) * $strictness;
         // echo "strictness sum outcome = " . strftime('%H:%M:%M', $strictnessSum) . "<br>";
@@ -84,5 +86,17 @@
         // echo "strictness and consistency sum outcome = " . strftime('%H:%M:%M', $consistencySum) . "<br>";
         $jsonObj->$jsonKeyVal = strftime('%H:%M:%M', $consistencySum); // output in timeString
         // $jsonObj->$jsonKeyVal = $consistencySum; // output in seconds
+        $calculatedCount += 1;
+    }
+    
+    // update times in db
+    if($calculatedCount == 2) {
+        $arr = json_decode($json, true);
+        $setRecommendedQuery = "UPDATE c_devices SET sunriseTime='" . $arr["outBedTimeRecommended"] . "', sunsetTime='" . $arr["inBedTimeRecommended"] . "' WHERE id='" . $deviceId . "'";
+        // if ($mysqli->query($setRecommendedQuery) === TRUE) {
+        //     echo "New record created successfully";
+        // } else {
+        //     echo "Error: " . $setRecommendedQuery . "<br>" . $mysqli->error;
+        // }
     }
 ?>

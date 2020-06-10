@@ -31,13 +31,13 @@ strand_t STRANDS[1] = {
 #pragma GCC diagnostic pop
 int STRANDCNT = COUNT_OF(STRANDS);
 
-float beforeBed_animDuration = 10.0; // seconds
-float sunrise_animDuration = 6.0;    // seconds
-float sunset_animDuration = 60.0;    // seconds
+int beforeBed_animDuration = 1800; // seconds (30 minutes)
+int sunrise_animDuration = 1800;    // 30 minutes in seconds
+int sunset_animDuration = 1800;    // 30 minutes in seconds
 
-unsigned long sunrise_startTime;                                               // time to start sunrise in millis() -> from daily httpClient request
-unsigned long beforeBed_startTime;                                             // time to start beforeBed (moment to prepare for sleep) in millis() -> from daily httpClient request
-unsigned long sunset_startTime = beforeBed_startTime + beforeBed_animDuration; // directly after before bed indicatio
+int sunrise_startTime; // time to start sunrise in millis() -> from daily httpClient request
+int sunset_startTime; // directly after before bed indicatio
+int beforeBed_startTime; // time to start beforeBed (moment to prepare for sleep) in millis() -> from daily httpClient request
 
 ///*** current time settings ***///
 // NTP server current time libs
@@ -70,6 +70,8 @@ const char *password = "B4gels=L0ve";
 bool isInBed = false;
 bool wasInBed = false;
 
+String inBedTimeRecommended;
+String outBedTimeRecommended;
 String inBedTimeRecord;
 String outBedTimeRecord;
 
@@ -98,6 +100,11 @@ void setup()
   fansInit();
   ntpClientInit();
   btnLedInit();
+  httpGetRecommended();
+  // Test times
+  // sunrise_startTime = currentTime;
+  // beforeBed_startTime = currentTime;
+//  sunset_startTime = currentTime;
 
   Serial.println("Init complete");
 }
@@ -105,22 +112,24 @@ void setup()
 //**************************************************************************//
 void loop()
 {
+  strand_t * strands [STRANDCNT];
+  for (int i = 0; i < STRANDCNT; i++) {
+    strands[i] = &STRANDS[i];
+  }
+  while(!timeClient.update()) timeClient.forceUpdate();
   // find/reset led strip
   ledStripUpdate();
-
-  while(!timeClient.update()) {
-    timeClient.forceUpdate();
-  }
-  currentTime = timeClient.getEpochTime();
-  // Serial.println(String(timeClient.getHours()) + ":" + String(timeClient.getMinutes()) + ":" + String(timeClient.getSeconds()) );
+  currentTime = timeClient.getHours() * 3600 + timeClient.getMinutes() * 60 + timeClient.getSeconds();
   // Serial.println(currentTime);
   btnPress();
   setBedTimeRecords();
   if(sendRecords) {
     delay(10);
-    if(httpSendRecords()) httpGetRecommended();
+    httpSendRecords();
   }
-  // beforeBed(STRANDS);
-  //  sunrise(STRANDS);
+  if(currentTime == (12 * 3600)) httpGetRecommended(); // if it's 12:00:00, get new recommended times
+  beforeBed(strands); // if it's time to prepare
+  // sunset(strands); // if it's time to go to bed
+  sunrise(strands); // if it's time to go to bed
 }
 //**************************************************************************//

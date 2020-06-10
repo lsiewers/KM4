@@ -1,6 +1,16 @@
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
+<!doctype html>
 
+<html lang="en">
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+
+  <title>CIRCA personal sun</title>
+  <meta name="author" content="Luuk Siewers">
+
+</head>
+
+<body>
 <h1>Register page</h1>
 
 <form action="user_register.php" method="get">
@@ -25,3 +35,5 @@
 </form>
 
 <a href="user_form.php">< back to login</a>
+</body>
+</html>
