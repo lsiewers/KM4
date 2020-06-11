@@ -18,7 +18,7 @@
     if($row["inBedTime"] == NULL) 
         echo "Get your device running first to get your recommended time";
     else 
-        echo "In bed time (sunset): ". $row["inBedTime"] . "<br>Out bed time (sunrise):" .  $row["outBedTime"]; 
+        echo "In bed time (sunset): ". $row["inBedTime"] . "<br><br>Out bed time (sunrise): " .  $row["outBedTime"]; 
     ?>
 </pre>
 
@@ -42,15 +42,15 @@
     } else {
         do {
             echo "<li>"
-                    .strftime("%A %d %B", strtotime($record["inBedRecord"])).
+                    .strftime("%A night, %B %e", strtotime($record["inBedRecord"])).
                     "
                     <ul>
-                        <li><small>Went to bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["inBedRecord"]))."</strong>, ".showDiff($record["inBedRecord"],$record["inBedRecommended"])."</li>
-                        <li><small>Went out of bed at</small> <strong>".strftime("%H:%M:%S", strtotime($record["outBedRecord"]))."</strong>, ".showDiff($record["outBedRecord"],$record["outBedRecommended"])."</li>
+                        <li class='toBedRecord'><strong>".strftime("%H:%M:%S", strtotime($record["inBedRecord"]))."</strong>, ".showDiff($record["inBedRecord"],$record["inBedRecommended"])."</li>
+                        <li class='outBedRecord'><strong>".strftime("%H:%M:%S", strtotime($record["outBedRecord"]))."</strong>, ".showDiff($record["outBedRecord"],$record["outBedRecommended"])."</li>
                     </ul> 
                     <form method='POST'> 
                         <input type='text' name='id' value='" . $record['id'] ."' hidden />
-                        <input type='submit' name='deleteRecordBtn' value='Delete Record'/> 
+                        <input type='submit' class='delete' name='deleteRecordBtn' value='Delete Record'/> 
                     </form> 
                 </li>";
         } while ($record = $result->fetch_assoc());
@@ -94,8 +94,3 @@
     }
 ?>
 </ul>
-
-<style>
- .later { color: orange; }
- .earlier { color: turquoise; }
-</style>

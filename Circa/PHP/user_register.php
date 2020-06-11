@@ -1,12 +1,13 @@
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
-
 <!doctype html>
 
 <html lang="en">
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
+
+<link rel="stylesheet" href="https://use.typekit.net/ire0dpa.css">
+<link rel="stylesheet" href="css/stylesheet.css"/>
+<link rel="icon" type="image/png" href="icons/sun.png" />
 
   <title>CIRCA personal sun</title>
   <meta name="author" content="Luuk Siewers">

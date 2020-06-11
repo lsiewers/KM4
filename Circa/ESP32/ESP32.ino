@@ -103,7 +103,7 @@ void setup()
   httpGetRecommended();
   
   // Test animations after start-up
-  sunrise_startTime = currentTime;
+//  sunrise_startTime = currentTime;
   // beforeBed_startTime = currentTime;
   //  sunset_startTime = currentTime;
 

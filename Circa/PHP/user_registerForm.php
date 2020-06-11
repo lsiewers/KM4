@@ -5,6 +5,10 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
 
+<link rel="stylesheet" href="https://use.typekit.net/ire0dpa.css">
+<link rel="stylesheet" href="css/stylesheet.css"/>
+<link rel="icon" type="image/png" href="icons/sun.png" />
+
   <title>CIRCA personal sun</title>
   <meta name="author" content="Luuk Siewers">
 
@@ -14,7 +18,9 @@
 <h1>Register page</h1>
 
 <form action="user_register.php" method="get">
+    <label for="email">Email</label>
     <input type="email" name="email" autocomplete placeholder="fill in your email" require/><br>
+    <label for="Password">Password</label>
     <input type="password" name="password" placeholder="fill in your password" require/><br><br>
     <input type="firstName" name="firstName" autocomplete placeholder="fill in your first name" require/><br>
     <input type="date" name="birthdate" autocomplete placeholder="fill in your birthday" require/><br>

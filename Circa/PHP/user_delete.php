@@ -1,7 +1,7 @@
 <?php
     echo "
         <form method='POST'> 
-            <input type='submit' name='deleteAccount' value='Delete your account'/>
+            <input type='submit' class='delete' name='deleteAccount' value='Delete your account'/>
             <small>This will also unregister your device and delete it's records. This cannot be undone</small>
         </form><br> 
     ";

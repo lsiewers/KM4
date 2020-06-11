@@ -1,9 +1,9 @@
 <?php
     echo "
         <form method='POST'> 
-            <input type='submit' name='deregisterDeviceBtn' value='Deregister device and delete its records'/>
+            <input type='submit' class='delete' name='deregisterDeviceBtn' value='Deregister device and delete its records'/>
             <small>This cannot be undone</small>
-        </form><br> 
+        </form>
     ";
 
     if(isset($_POST['deregisterDeviceBtn'])) { 

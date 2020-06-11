@@ -5,6 +5,10 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
 
+<link rel="stylesheet" href="https://use.typekit.net/ire0dpa.css">
+<link rel="stylesheet" href="css/stylesheet.css"/>
+<link rel="icon" type="image/png" href="icons/sun.png" />
+
   <title>CIRCA personal sun</title>
   <meta name="author" content="Luuk Siewers">
 
@@ -36,7 +40,7 @@
         showerror($mysqli->errno,$mysqli->error);
     } else {
         $row = $result->fetch_assoc();
-        echo "<br> Hello, " . $row['firstName'];
+        echo "<br><strong> Hello, " . $row['firstName'] . "</strong>";
         if($row['deviceId'] == NULL) {
             echo "<br>No device connected to this user";
             include "deviceRegister_form.php";
