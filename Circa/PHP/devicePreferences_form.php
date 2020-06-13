@@ -1,24 +1,24 @@
 <br>
-<p>
-    You can change the strictness of your perfect rhythm. <br>
-    <small>Your bedtimes are depended on your chronotype and your recorded bedtimes</small>
-    <small>If the strictness is high, your recommended bedtime will be more influenced by your chronotype</small><br>
-    <small>If the strictness is low, your recommended bedtime will be more influenced by your average bedtime</small>
-</p>
 
 <form action="devicePreferences_update.php">
-    <h3><label for="strictness">strictness</label></h3>
-    <?= $row['strictness'] ?>
+    <h2><label for="strictness">strictness</label></h2>
+    <p>
+        <small>Your bedtimes are depended on your chronotype and your recorded bedtimes</small>
+        <small>If the strictness is high, your recommended bedtime will be more influenced by your chronotype</small><br>
+        <small>If the strictness is low, your recommended bedtime will be more influenced by your average bedtime</small>
+    </p>
+    <span class="strictnessValue"><?= $row['strictness'] * 100 ?> / 100</span>
     <input name="strictness" type="range" value="<?= $row['strictness'] * 100 ?>" min="0" max="100"><br>
     <input type="submit" value="update">
 </form>
 
 <h3>Upcoming recommended bedtimes</h3>
-<pre><?php 
-    if($row["inBedTime"] == NULL) 
-        echo "Get your device running first to get your recommended time";
-    else 
-        echo "In bed time (sunset): ". $row["inBedTime"] . "<br><br>Out bed time (sunrise): " .  $row["outBedTime"]; 
+<pre>
+    <?php 
+        if($row["inBedTime"] == NULL) 
+            echo "Get your device running first to get your recommended time";
+        else 
+            echo "In bed time (sunset): ". $row["inBedTime"] . "<br><br>Out bed time (sunrise): " .  $row["outBedTime"]; 
     ?>
 </pre>
 
