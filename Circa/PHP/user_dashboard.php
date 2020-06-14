@@ -21,10 +21,12 @@
     include 'connect_db.php';
     session_start();
 
+    // if session ended, go to login page and try again
     if($_SESSION['userId'] == NULL) {
         header("Location: user_form.php?feedback=" . urlencode('Session ended, login and try again please'));
     }
 
+    // get user and device data
     $query = "SELECT 
                     u.firstName AS firstName,
                     u.id AS userId,
@@ -40,25 +42,20 @@
         showerror($mysqli->errno,$mysqli->error);
     } else {
         $row = $result->fetch_assoc();
+        // Give a personal welcome
         echo "<br><strong> Hello, " . $row['firstName'] . "</strong>";
         if($row['deviceId'] == NULL) {
+            // Show device register form if there are no devices selected yet
             echo "<br>No device connected to this user";
             include "deviceRegister_form.php";
         } else {
+            // Show device data if one is registered
             include "devicePreferences_form.php";
             include "deviceRegister_deregister.php";
+            // delete user button (TO DO: should also be available when no devices are registered)
             include "user_delete.php";
         }
     }
-
-    // $getUserDevicesQuery = "SELECT * FROM c_devices WHERE userId=" . $_SESSION['userId'] . " LIMIT 1";
-
-    // if (!($result = $mysqli->query($getUserDevicesQuery))) {
-    //     showerror($mysqli->errno,$mysqli->error);
-    // } else {
-    //     $deviceRow = $result->fetch_assoc();
-    //     
-    // }
 ?>
 
 <a href="user_logout.php">Log out</a>

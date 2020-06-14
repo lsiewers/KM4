@@ -20,13 +20,15 @@
         include 'checkparam.php';
         session_start();
 
-        $password = checkParam("password", 30, false); // number between 0 - 30
-        $email = checkParam("email", 99, FILTER_VALIDATE_EMAIL); // number between 0 - 999
+        $password = checkParam("password", 30, false); // string between 0 - 30
+        $email = checkParam("email", 99, FILTER_VALIDATE_EMAIL); // string between 0 - 999
 
+        // If not all fields are filled (should work with input:require only)
         if($password == NULL || $email == NULL) {
             header('Location: user_form.php?feedback=' . urlencode("Make sure to fill both fields"));
         }
 
+        // Select user with login credentials
         echo $query = "SELECT * FROM c_users WHERE email='" . $email . "' AND password='" . $password . "' LIMIT 1";
 
         // check for errors in insert query
@@ -35,9 +37,11 @@
         } else {
             $row = $result->fetch_assoc();
             if($row["id"] != NULL) {
+                // If user exists with these credentials
                 $_SESSION["userId"]= $row["id"];
                 header('Location: user_dashboard.php');
             } else {
+                // If user doesn't exists with these credentials
                 header('Location: user_form.php?feedback=' . urlencode("Whoops, are you sure your email/password are right?"));
             }
         }

@@ -16,7 +16,7 @@
 
 <body>
 <h1>Register page</h1>
-
+<!-- register form -->
 <form action="user_register.php" method="get">
     <label for="email">Email</label><br>
     <input type="email" name="email" autocomplete placeholder="fill in your email" require/><br>
@@ -45,6 +45,7 @@
     <input type="submit" value="Register">
 </form>
 <br>
+<!-- Back to login page -->
 <small><a href="user_form.php">< back to login</a></small>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <br>
 
+<!-- strictness form -->
 <form action="devicePreferences_update.php">
     <h2><label for="strictness">strictness</label></h2>
     <p>
@@ -12,6 +13,7 @@
     <input type="submit" value="update">
 </form>
 
+<!-- upcomming recommended times -->
 <h3>Upcoming recommended bedtimes</h3>
 <pre>
     <?php 
@@ -22,10 +24,11 @@
     ?>
 </pre>
 
+<!-- records list -->
 <h2>Records</h2>
 <ul class="records">
 <?php 
-    
+    // get last 25 records of device
     $recordsQuery = "SELECT *
                     FROM c_bedTimeRecords
                     WHERE deviceId='" . $row['deviceId'] . "' 
@@ -38,8 +41,10 @@
     $record = $result->fetch_assoc();
 
     if($record["inBedRecord"] == 0) {
+        // Say ... if there or no records yet
         echo "no records yet";
     } else {
+        // Display list of records
         do {
             echo "<li>"
                     .strftime("%A night, %B %e", strtotime($record["inBedRecord"])).
@@ -56,7 +61,7 @@
         } while ($record = $result->fetch_assoc());
     }
 
-
+    // If delete record button pressed
     if(isset($_POST['deleteRecordBtn'])) { 
         $deleteQuery = "DELETE FROM c_bedTimeRecords WHERE id=" . $_POST['id'];
         echo "<br>";
@@ -67,6 +72,7 @@
         }
     } 
 
+    // Show difference in time of record and recommended in readable format 
     function showDiff($record, $recommended) {
         $diff = strtotime($record) - strtotime($recommended);
         $hours;

@@ -31,6 +31,7 @@ strand_t STRANDS[1] = {
 #pragma GCC diagnostic pop
 int STRANDCNT = COUNT_OF(STRANDS);
 
+///*** animation settings ***///
 int beforeBed_animDuration = 1800; // seconds (30 minutes)
 int sunrise_animDuration = 1800;    // 30 minutes in seconds
 int sunset_animDuration = 1800;    // 30 minutes in seconds
@@ -96,6 +97,7 @@ void setup()
   // laat de verbinding met de server openstaan (als mogelijk)
   client.setReuse(true);
 
+  // initialize stuff
   ledStripInit();
   fansInit();
   ntpClientInit();
@@ -128,9 +130,13 @@ void loop()
     delay(10);
     httpSendRecords();
   }
-  if(currentTime == (12 * 3600)) httpGetRecommended(); // if it's 12:00:00, get new recommended times
+  
+  if(currentTime == (12 * 3600)) httpGetRecommended(); 
+  // if it's 12:00:00, get new recommended times
+  // this is definitely not a very great way of doing so, maybe I should've done it every hour.
+
   beforeBed(strands); // if it's time to prepare
   // sunset(strands); // if it's time to go to bed
-  sunrise(strands); // if it's time to go to bed
+  sunrise(strands); // if it's time to go out of bed
 }
 //**************************************************************************//

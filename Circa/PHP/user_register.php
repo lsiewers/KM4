@@ -32,12 +32,13 @@
         echo showerror($mysqli->errno,$mysqli->error);
     } else {
         if($result->fetch_assoc() == NULL) {
-            //doesn't exist yet!
+            // if user doesn't exist yet, add it with form information
             echo $setUserQuery = "INSERT INTO c_users (id, firstName, birthdate, email, password, chronotype) VALUES (NULL, '" . $firstName . "', '" . $birthdate . "', '" . $email . "', '" . $password . "', '" . $chronotype . "')";
 
             if ($mysqli->query($setUserQuery) === TRUE) {
                 echo "New record created successfully";
                 if($_SESSION['userId'] == NULL) {
+                    // if succeeded, go back to login page
                     header("Location: user_form.php?feedback=" . urlencode('Register completed! Now you can log in with your new account.') .")");
                 }
               } else {
@@ -45,6 +46,7 @@
             }
         //         header('Location: user_account.php');
         } else {
+            // account already exists based on email
             echo "An account with this email exists already!";
         }
     }

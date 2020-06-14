@@ -50,6 +50,7 @@ void httpRequest(String request)
     client.end();
 }
 
+// send recorded times to server
 bool httpSendRecords() {
     // create json object
     DynamicJsonDocument doc(2048);
@@ -74,6 +75,7 @@ bool httpSendRecords() {
     }
 }
 
+// get recommended times from server
 void httpGetRecommended() {
     httpRequest("get-recommended.php?deviceId=" + String(deviceId));
     if(response != "\0") {

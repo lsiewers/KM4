@@ -16,7 +16,7 @@
 
 <body>
 <h1>Login</h1>
-<!-- https://home.hku.nl/~ton.markus/kern_iad/index.php?les=6&content=7 -->
+<!-- Login form -->
 <form action="user_login.php" method="get">
     <label for="email">Email</label><br>
     <input type="email" name="email" placeholder="fill in your email" required/><br>
@@ -24,12 +24,12 @@
     <input type="password" name="password" placeholder="fill in your password" required/><br>
     <input type="submit" value="Login">
 </form>
-
+<!-- Feedback text -->
 <?php
     include 'checkparam.php';
     echo "<p class='feedback'>". urldecode(checkParam("feedback", 100, false, false, false)) . "</p>"; 
 ?>
-
+<!-- Register button -->
 <p>Not registered yet?</p>
 <a href="user_registerForm.php">Register</a>
 </body>

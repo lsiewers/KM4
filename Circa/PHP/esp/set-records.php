@@ -5,6 +5,7 @@
     $deviceId = checkParam('deviceId', 999, FILTER_VALIDATE_INT);
     $data = json_decode(checkParam('data', 999, false), true);
 
+    // set records query
     $setDataQuery = "INSERT INTO c_bedTimeRecords (id, deviceId, inBedRecord, outBedRecord, InBedRecommended, OutBedRecommended) 
         VALUES (NULL," . $deviceId . ",'" . $data['inBedTimeRecord'] . "','" . $data['outBedTimeRecord'] . "','" . $data['inBedTimeRecommended'] . "','" . $data['outBedTimeRecommended'] . "')";
 

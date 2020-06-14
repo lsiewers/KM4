@@ -15,6 +15,7 @@ void btnLedInit() {
      digitalWrite(LedPin, HIGH);
 }
 
+// set LED and isInBed variable based on button press
 void btnPress() {
     int btnVal = digitalRead(BtnPin);
     btnPressed = (millis() - btnPressedTime < btnPressTimeOutDuration);
@@ -26,19 +27,14 @@ void btnPress() {
             isInBed = !isInBed;
             if(isInBed) {
                 digitalWrite(LedPin, LOW);
-                Serial.println("Good night");
-                inBedTimeRecord = getFullFormattedTime();
             } else {
                 digitalWrite(LedPin, HIGH);
-                Serial.println("Good morning");
-                outBedTimeRecord = getFullFormattedTime();
             } 
         }
     }
 }
 
-
-
+// find out if is in bed or not and set
 void setBedTimeRecords()
 {
     sendRecords = false;
@@ -46,6 +42,8 @@ void setBedTimeRecords()
     {
         inBedTimeRecord = currentTime;
         wasInBed = true;
+        Serial.println("Good night");
+        inBedTimeRecord = getFullFormattedTime();
         // Serial.println("In bed at: " + inBedTimeRecord);
     }
     else if (wasInBed && !isInBed)
@@ -53,6 +51,8 @@ void setBedTimeRecords()
         outBedTimeRecord = currentTime;
         wasInBed = false;
         // Serial.println("Out of bed at: " + outBedTimeRecord);
+        Serial.println("Good morning");
+        outBedTimeRecord = getFullFormattedTime();
         sendRecords = true;
     }
 }
